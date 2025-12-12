@@ -1,5 +1,6 @@
 import os
 import requests
+import speech_recognition as sr
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,18 +14,35 @@ HEADERS = {
 }
 
 
-def transcribe_audio(filepath, model='whisper-1', language='ro'):
-    """Send audio file to OpenAI transcription endpoint and return text.
-    Model names may change; check OpenAI docs if this fails.
+def transcribe_audio(filepath, model=None, language='ro-RO'):
+    """Transcribe a local audio file using the SpeechRecognition library.
+
+    This replaces the previous Whisper/OpenAI transcription. By default it uses
+    the Google Web Speech API via the speech_recognition package. The
+    `language` parameter can be something like 'ro-RO' for Romanian.
+
+    Returns the transcribed text (or an empty string on failure).
     """
-    with open(filepath, 'rb') as f:
-        files = {'file': (filepath, f)}
-        data = {'model': model, 'language': language}
-        resp = requests.post(TRANSCRIBE_URL, headers=HEADERS, files=files, data=data)
-    resp.raise_for_status()
-    j = resp.json()
-    # typical response includes 'text'
-    return j.get('text', '')
+    recognizer = sr.Recognizer()
+    try:
+        with sr.AudioFile(filepath) as source:
+            audio = recognizer.record(source)
+        try:
+           
+            text = recognizer.recognize_google(audio, language=language)
+            return text
+        except sr.UnknownValueError:
+            print('SpeechRecognition: audio unintelligible')
+            return ''
+        except sr.RequestError as e:
+            print(f'SpeechRecognition request failed: {e}')
+            return ''
+    except FileNotFoundError:
+        print(f'Audio file not found: {filepath}')
+        return ''
+    except Exception as e:
+        print(f'Unexpected error during transcription: {e}')
+        return ''
 
 
 
