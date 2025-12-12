@@ -3,7 +3,7 @@ import sounddevice as sd
 import soundfile as sf
 
 
-def record_wav(filename="audio.wav", duration=5, samplerate=16000, channels=1):
+def record_wav(filename="audio.wav", duration=20, samplerate=16000, channels=1):
     """Record audio and write to a WAV file. Returns the filename."""
     print(f"Recording for {duration} seconds...")
     recording = sd.rec(int(duration * samplerate), samplerate=samplerate, channels=channels)

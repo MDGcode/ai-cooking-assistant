@@ -43,7 +43,7 @@ class App:
         self.status = tk.Label(root, text='Idle')
         self.status.pack()
 
-        self.record_btn = tk.Button(controls, text='Record (5s)', command=self.record_once)
+        self.record_btn = tk.Button(controls, text='Record (20s)', command=self.record_once)
         self.record_btn.pack(side=tk.LEFT, padx=4)
 
         self.ask_btn = tk.Button(controls, text='Transcribe & Ask', command=self.transcribe_and_ask)
@@ -79,7 +79,7 @@ class App:
                     self.ask_btn.config(state=tk.DISABLED)
                 except Exception:
                     pass
-                filename = record_wav(duration=4)
+                filename = record_wav(duration=20)
                 self.status.config(text=f'Recorded {filename}')
                 self.append('SYSTEM', f'Recorded audio saved as {filename}')
             finally:
