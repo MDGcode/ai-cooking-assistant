@@ -14,13 +14,8 @@ HEADERS = {
 }
 
 
-def transcribe_audio(filepath, model=None, language='ro-RO'):
+def transcribe_audio(filepath, language='ro-RO'):
     """Transcribe a local audio file using the SpeechRecognition library.
-
-    This replaces the previous Whisper/OpenAI transcription. By default it uses
-    the Google Web Speech API via the speech_recognition package. The
-    `language` parameter can be something like 'ro-RO' for Romanian.
-
     Returns the transcribed text (or an empty string on failure).
     """
     recognizer = sr.Recognizer()
